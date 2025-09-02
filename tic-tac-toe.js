@@ -13,13 +13,17 @@ const gameboard = (function() {
 
     const getBoard = () => board;
 
+    const placeMarker = (row, column, player) => {
+        board[row][column].addMarker(player);
+    };
+
     const printBoard = () => {
-        const boardWithMarkers = board.map((row) => row.map((cell) => cell.getValue()));
+        const boardWithMarkers = board.map((row) => row.map((cell) => cell.getMarker()));
         console.log(boardWithMarkers);
     }
 
 
-    return {getBoard, printBoard};
+    return {getBoard, placeMarker, printBoard};
 })();
 
 function Cell() {
