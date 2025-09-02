@@ -22,7 +22,6 @@ const gameboard = (function() {
         console.log(boardWithMarkers);
     }
 
-
     return {getBoard, placeMarker, printBoard};
 })();
 
@@ -38,3 +37,43 @@ function Cell() {
     return {addMarker, getMarker};
 }
 
+function createPlayer () {
+    const name = prompt("Please enter a name: ");
+    const marker = prompt("Please enter an X or O: ");
+
+    return {name, marker};
+}
+
+const gameController = (function() {
+    const players = [createPlayer(), createPlayer()];
+    
+    let currentPlayer = players[0];
+
+    const switchPlayerTurn = () => {
+        currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+    };
+
+    const getCurrentPlayer = () => currentPlayer;
+
+    const printNewRound = () => {
+        gameboard.printBoard();
+        console.log(`${getCurrentPlayer().name}'s turn.`);
+    }
+
+    const playRound = (row, column) => {
+        console.log(`Placing ${getCurrentPlayer().name}'s marker on location ${row}, ${column}...`);
+        gameboard.placeMarker(row, column, getCurrentPlayer().marker);
+
+        // check for a winner and handle that logic, such as a win message //
+
+        switchPlayerTurn();
+        printNewRound();
+    };
+
+    // initial play game message
+    printNewRound();
+
+    return {playRound, getCurrentPlayer};
+})();
+
+// gameController.playRound(0, 1);
