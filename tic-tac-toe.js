@@ -60,39 +60,54 @@ const gameController = (function() {
         console.log(`${getCurrentPlayer().name}'s turn.`);
     }
 
+    const checkWinner = (board, marker) => {
+        // check rows
+        for (let i = 0; i < 3; i++) {
+            if (board[i][0].getMarker() === marker && board[i][1].getMarker() === marker && board[i][2].getMarker() === marker) {
+                return true;
+            }
+        }
+
+        // check columns
+        for (let i = 0; i < 3; i++) {
+            if (board[0][i].getMarker() === marker && board[1][i].getMarker() === marker && board[2][i].getMarker() === marker) {
+                return true;
+            }
+        }
+
+        // check diagonals
+        if ((board[0][0].getMarker() === marker && board[1][1].getMarker() === marker && board[2][2].getMarker() === marker) ||
+        (board[0][2].getMarker() === marker && board[1][1].getMarker() === marker && board[2][0].getMarker() === marker)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    const checkTie = (board) => {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (board[i][j].getMarker() === "") {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     const playRound = (row, column) => {
         console.log(`Placing ${getCurrentPlayer().name}'s marker on location ${row}, ${column}...`);
         gameboard.placeMarker(row, column, getCurrentPlayer().marker);
 
         // check for a winner and handle that logic, such as a win message //
-        board = gameboard.getBoard();
-        switch(board) {
-            // the three rows winning
-            case board[0][0] === getCurrentPlayer().marker && board[0][1] === getCurrentPlayer().marker && board[0][2] === getCurrentPlayer().marker:
-            case board[1][0] === getCurrentPlayer().marker && board[1][1] === getCurrentPlayer().marker && board[1][2] === getCurrentPlayer().marker:
-            case board[2][0] === getCurrentPlayer().marker && board[2][1] === getCurrentPlayer().marker && board[2][2] === getCurrentPlayer().marker:
-
-            // the three columns winning
-            case board[0][0] === getCurrentPlayer().marker && board[1][0] === getCurrentPlayer().marker && board[2][0] === getCurrentPlayer().marker:
-            case board[0][1] === getCurrentPlayer().marker && board[1][1] === getCurrentPlayer().marker && board[2][1] === getCurrentPlayer().marker:
-            case board[0][2] === getCurrentPlayer().marker && board[1][2] === getCurrentPlayer().marker && board[2][2] === getCurrentPlayer().marker:
-
-            // the two diagonals winning
-            case board[0][0] === getCurrentPlayer().marker && board[1][1] === getCurrentPlayer().marker && board[2][2] === getCurrentPlayer().marker:
-            case board[0][2] === getCurrentPlayer().marker && board[1][1] === getCurrentPlayer().marker && board[2][0] === getCurrentPlayer().marker:
-                console.log(`${getCurrentPlayer().name} has won the game!`);
-                break;
-
-            // a tie
-            case board[0][0] === ("X" || "O") && board[0][1] === ("X" || "O") && board[0][2] === ("X" || "O") &&
-                board[1][0] === ("X" || "O") && board[1][1] === ("X" || "O") && board[1][2] === ("X" || "O") &&
-                board[2][0] === ("X" || "O") && board[2][1] === ("X" || "O") && board[2][2] === ("X" || "O"):
-                console.log("The game has ended in a tie.");
-                break;
-            default:
+        if (checkWinner(gameboard.getBoard(), getCurrentPlayer().marker)) {
+            console.log(`${getCurrentPlayer().name} has won the game!`);
+            return;
         }
-
-
+        if (checkTie(gameboard.getBoard())) {
+            console.log("The game has ended in a tie.");
+            return;
+        }
 
         switchPlayerTurn();
         printNewRound();
@@ -104,4 +119,8 @@ const gameController = (function() {
     return {playRound, getCurrentPlayer};
 })();
 
+gameController.playRound(0, 0);
+gameController.playRound(1, 0);
 gameController.playRound(0, 1);
+gameController.playRound(1, 1);
+gameController.playRound(0, 2);
