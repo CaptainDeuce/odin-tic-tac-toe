@@ -101,7 +101,8 @@ const gameController = (function() {
 
         // check for a winner and handle that logic, such as a win message //
         if (checkWinner(gameboard.getBoard(), getCurrentPlayer().marker)) {
-            console.log(`${getCurrentPlayer().name} has won the game!`);
+            const winMessageH1 = document.querySelector(".win-message");
+            winMessageH1.textContent = `${getCurrentPlayer().name} has won the game!`;
             gameboard.printBoard();
             return;
         }
