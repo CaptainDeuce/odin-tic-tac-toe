@@ -118,30 +118,29 @@ const gameController = (function() {
     // initial play game message
     printNewRound();
 
-    return {playRound, getCurrentPlayer, getBoard: gameboard.getBoard()};
+    return {playRound, getCurrentPlayer};
 })();
 
-const displayController = (function() {
+function displayController() {
     const playerTurnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board");
 
     const updateScreen = () => {
         boardDiv.textContent = "";
 
-        const board = gameController.getBoard();
+        const board = gameboard.getBoard();
         const currentPlayer = gameController.getCurrentPlayer();
 
-        playerTurnDiv.textContent = `${currentPlayer}'s turn...`
+        playerTurnDiv.textContent = `${currentPlayer.name}'s turn...`
 
 
         // board -> [[X X O], [O X O], [O O X]]
 
-
-        board.forEach(row => {
+        board.forEach((row, rowIndex) => {
             row.forEach((cell, column) => {
                 const cellButton = document.createElement("button");
                 cellButton.classList.add("cell");
-                cellButton.dataset.row = row;
+                cellButton.dataset.row = rowIndex;
                 cellButton.dataset.column = column;
                 cellButton.textContent = cell.getMarker();
                 boardDiv.appendChild(cellButton);
@@ -159,7 +158,7 @@ const displayController = (function() {
     })
 
     updateScreen();
-})();
+}
 
 displayController();
 
