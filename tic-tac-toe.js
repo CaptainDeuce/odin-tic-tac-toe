@@ -133,9 +133,6 @@ function displayController() {
 
         playerTurnDiv.textContent = `${currentPlayer.name}'s turn...`
 
-
-        // board -> [[X X O], [O X O], [O O X]]
-
         board.forEach((row, rowIndex) => {
             row.forEach((cell, column) => {
                 const cellButton = document.createElement("button");
@@ -153,7 +150,9 @@ function displayController() {
         const selectedColumn = e.target.dataset.column;
         if (!selectedRow || !selectedColumn) return;
 
-        gameController.playRound(selectedRow, selectedColumn);
+        if (gameboard.getBoard()[selectedRow][selectedColumn].getMarker() === "") {
+            gameController.playRound(selectedRow, selectedColumn);
+        }
         updateScreen();
     })
 
@@ -161,13 +160,3 @@ function displayController() {
 }
 
 displayController();
-
-// gameController.playRound(0, 0);
-// gameController.playRound(1, 0);
-// gameController.playRound(0, 1);
-// gameController.playRound(0, 2);
-// gameController.playRound(2, 0);
-// gameController.playRound(1, 1);
-// gameController.playRound(1, 2);
-// gameController.playRound(2, 1);
-// gameController.playRound(2, 2);
