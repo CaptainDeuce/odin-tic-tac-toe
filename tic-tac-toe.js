@@ -17,12 +17,16 @@ const gameboard = (function() {
         board[row][column].addMarker(player);
     };
 
-    const printBoard = () => {
-        const boardWithMarkers = board.map((row) => row.map((cell) => cell.getMarker()));
-        console.log(boardWithMarkers);
+    const clearBoard = () => {
+        for (let i = 0; i < rows; i++) {
+            board[i] = [];
+            for (let j = 0; j < columns; j++) {
+                board[i].push(Cell());
+            }
+        }
     }
 
-    return {getBoard, placeMarker, printBoard};
+    return {getBoard, placeMarker, clearBoard};
 })();
 
 function Cell() {
@@ -54,11 +58,6 @@ const gameController = (function() {
     };
 
     const getCurrentPlayer = () => currentPlayer;
-
-    const printNewRound = () => {
-        gameboard.printBoard();
-        console.log(`${getCurrentPlayer().name}'s turn.`);
-    }
 
     const checkWinner = (board, marker) => {
         // check rows
@@ -96,28 +95,22 @@ const gameController = (function() {
     }
 
     const playRound = (row, column) => {
-        console.log(`Placing ${getCurrentPlayer().name}'s marker on location ${row}, ${column}...`);
         gameboard.placeMarker(row, column, getCurrentPlayer().marker);
 
         // check for a winner and handle that logic, such as a win message //
         if (checkWinner(gameboard.getBoard(), getCurrentPlayer().marker)) {
-            const winMessageH1 = document.querySelector(".win-message");
+            const winMessageH1 = document.querySelector(".results-message");
             winMessageH1.textContent = `${getCurrentPlayer().name} has won the game!`;
-            gameboard.printBoard();
             return;
         }
         if (checkTie(gameboard.getBoard())) {
-            console.log("The game has ended in a tie.");
-            gameboard.printBoard();
+            const tieMessageH1 = document.querySelector(".results-message");
+            tieMessageH1.textContent = "It's a tie.";
             return;
         }
 
         switchPlayerTurn();
-        printNewRound();
     };
-
-    // initial play game message
-    printNewRound();
 
     return {playRound, getCurrentPlayer};
 })();
@@ -125,6 +118,7 @@ const gameController = (function() {
 function displayController() {
     const playerTurnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board");
+    const newGameButton = document.querySelector(".new-game-btn");
 
     const updateScreen = () => {
         boardDiv.textContent = "";
@@ -155,6 +149,23 @@ function displayController() {
             gameController.playRound(selectedRow, selectedColumn);
         }
         updateScreen();
+    })
+
+    newGameButton.addEventListener("click", () => {
+        gameboard.clearBoard();
+        boardDiv.textContent = "";
+        const board = gameboard.getBoard();
+
+        board.forEach((row, rowIndex) => {
+            row.forEach((cell, columnIndex) => {
+                const cellButton = document.createElement("button");
+                cellButton.classList.add("cell");
+                cellButton.dataset.row = rowIndex;
+                cellButton.dataset.column = columnIndex;
+                cellButton.textContent = "";
+                boardDiv.appendChild(cellButton);
+            })
+        })
     })
 
     updateScreen();
