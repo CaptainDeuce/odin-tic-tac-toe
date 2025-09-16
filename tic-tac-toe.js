@@ -152,6 +152,9 @@ function displayController() {
     })
 
     newGameButton.addEventListener("click", () => {
+        const resultsMessageH1 = document.querySelector(".results-message");
+        resultsMessageH1.textContent = "";
+
         gameboard.clearBoard();
         boardDiv.textContent = "";
         const board = gameboard.getBoard();
