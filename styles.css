@@ -26,3 +26,12 @@
     background: rgb(171, 247, 241);
     cursor: pointer;
 }
+
+.new-game-btn {
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: rgb(74, 125, 246);
+    padding: 10px;
+    width: 130px;
+    height: 55px;
+}
